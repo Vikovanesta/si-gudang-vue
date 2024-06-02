@@ -8,7 +8,7 @@ import BarChart from './BarChart.vue';
 
 
 <template class="bg-[#F5F5F5] ">
-  <div class="px-6 py-8">
+  <div class="px-6 pb-8">
     <div class="mt-4">
       <div class="flex  -mx-6 gap-3">
         <div class="w-full px-3 sm:w-1/2 xl:w-1/4">

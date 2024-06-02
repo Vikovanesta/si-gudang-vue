@@ -107,6 +107,7 @@ const login = async (): Promise<void> => {
 
     if ('token' in response.data.data) {
       setToken(response.data.data.token);
+      
 
       const token = localStorage.getItem('token');
       apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;

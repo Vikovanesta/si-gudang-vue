@@ -44,7 +44,7 @@ onMounted(async () => {
 
     <div class="overflow-y-auto bg-gray-200 lg:h-screen">
 
-      <h1 class="text-xl font-semibold text-gray-600 mx-5 mt-8">Menu</h1>
+      <h1 class="text-xl font-semibold text-gray-600 mx-5">Menu</h1>
 
       <nav class="mt-8">
         <router-link
