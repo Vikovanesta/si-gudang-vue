@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import DataProduk from '../components/DataProduk.vue';
-import PerformaToko from '../components/PerformaToko.vue';
 import BarChart from './BarChart.vue';
 
 

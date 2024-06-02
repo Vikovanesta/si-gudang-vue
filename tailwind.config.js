@@ -9,7 +9,7 @@ module.exports = {
         sans: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'main-blue': '#0063A7',
+        'main-blue': '#666CFF',
         'main-yellow' : '#FFA216'
       }
     },
