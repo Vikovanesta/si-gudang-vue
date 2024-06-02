@@ -2,15 +2,15 @@
 <template>
   <header class="flex items-center justify-between px-6 py-4 bg-white border-b">
     <div class="flex items-center" >
-      <button class="text-gray-500 focus:outline-none lg:hidden" @click="isOpen = true">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-      <div class="flex items-center lg:pr-20 lg:px-0  px-3">
-        <img src="src/assets/logo1.jpg">
-        <img src="src/assets/logo2.png">
+
+      <div class="flex flex-row flex-grow justify-self-start justify-start pe-16">
+        <img src="/src/assets/logo.png" alt="Logo" class="w-8 h-8 mx-2">
+        <div>
+          <p class="text-xs font-bold text-gray-600">Sistem Informasi</p>
+          <p class="text-xs font-bold text-gray-600">Peminjaman Alat dan Gudang</p>
+        </div>
       </div>
+
 
       <div class="relative mx-4 lg:mx-0">
         <span class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -45,13 +45,6 @@
               alt="Your avatar"
             />
           </button>
-  
-  <button class="hidden relative z-10 lg:block lg:flex-row text-left px-3" @click="dropdownOpen = !dropdownOpen">
-    <div v-if="user">
-      <h1 class="text-sm font-semibold">{{ user?.name }}</h1>
-      <h1 class="text-sm text-gray-600 font-medium">{{ user?.email }}</h1>
-    </div>
-  </button>
 </div>
 
         </div>
@@ -76,7 +69,6 @@
 
   </header>
 </template>
-<!-- Other parts of your component -->
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
