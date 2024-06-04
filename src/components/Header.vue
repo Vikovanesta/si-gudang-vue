@@ -79,7 +79,7 @@ import apiClient from '../http-common';
 import { User } from '../types/user'; // Import the User interface
 
 const { isOpen } = useSidebar();
-const { getUserInfo, removeToken, setToken } = useAuth();
+const { getUserInfo, logout, setToken } = useAuth();
 const router = useRouter();
 
 const user = ref<User | null>(getUserInfo());
@@ -96,10 +96,10 @@ const toggleDropdown = () => {
 
 const handleLogout = async () => {
   try {
-    removeToken();
+    logout();
     router.push('/');
-  } catch (error) {
-    console.error('Logout error:', error);
+  } catch (err) {
+    console.error('Logout error:', err);
   }
 };
 
@@ -107,7 +107,7 @@ onMounted(async () => {
   try {
     // Fetch user data after the component is mounted
     if (token) {
-      const response = await apiClient.get('/v1/merchants/me');
+      const response = await apiClient.get('/me/borrowing-requests');
       console.log('Backend Response:', response.data);
 
       if (response.data.status === true && response.data.data) {

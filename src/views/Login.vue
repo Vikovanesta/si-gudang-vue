@@ -63,6 +63,7 @@
               {{ isLoading ? 'Signing in...' : 'MASUK' }}
             </button>
           </div>
+          <div v-if="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
         </form>
         <div class="mt-6 text-center">
           <span class="text-gray-400">Belum memiliki akun? <a class="text-main-blue" href="#">Daftar</a> </span>
@@ -81,8 +82,7 @@ import { useRouter } from 'vue-router';
 const { setToken } = useAuth();
 const router = useRouter();
 
-const name = ref('merchant');
-const email = ref('merchant@mail.com');
+const email = ref('student@mail.com');
 const password = ref('password');
 const rememberMe = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -97,19 +97,17 @@ const login = async (): Promise<void> => {
   try {
     isLoading.value = true;
 
-    const response = await apiClient.post('/v1/auth', {
-      name: name.value,
+    const response = await apiClient.post('/login', {
       email: email.value,
       password: password.value,
     });
 
     console.log('Backend Response:', response.data);
 
-    if ('token' in response.data.data) {
-      setToken(response.data.data.token);
-      
+    if (response.data?.data?.token) {
+      const token = response.data.data.token;
+      setToken(token);
 
-      const token = localStorage.getItem('token');
       apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       router.push('/dashboard');
     } else {
@@ -117,8 +115,13 @@ const login = async (): Promise<void> => {
     }
 
   } catch (err) {
-    errorMessage.value = 'Failed to fetch CSRF cookie or invalid credentials';
+    if (err.response && err.response.data && err.response.data.message) {
+      errorMessage.value = err.response.data.message;
+    } else {
+      errorMessage.value = 'An unknown error occurred.';
+    }
     console.error('Login error:', err);
+  } finally {
     isLoading.value = false;
   }
 };

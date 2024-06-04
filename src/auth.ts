@@ -1,4 +1,3 @@
-// auth.ts
 
 import { ref, Ref } from 'vue';
 import apiClient from './http-common';
@@ -7,11 +6,11 @@ import { User } from './types/user';
 interface Auth {
   token: Ref<string | null>;
   setToken: (newToken: string) => void;
-  removeToken: () => void;
+  logout: () => Promise<void>;
   getUserInfo: () => User | null; // Update the return type here
 }
 
-const token: Ref<string | null> = ref(localStorage.getItem('token') || null);
+const token: Ref<string | null> = ref(localStorage.getItem('token'));
 const user: Ref<User | null> = ref(null);
 
 export function useAuth(): Auth {
@@ -20,17 +19,21 @@ export function useAuth(): Auth {
     setToken(newToken: string) {
       localStorage.setItem('token', newToken);
       token.value = newToken;
-
-      // Fetch user information immediately after setting the token
       fetchUserInfo();
     },
-    removeToken() {
-      localStorage.removeItem('token');
-      token.value = null;
-      user.value = null; // Clear user information when the token is removed
+    async logout() {
+      try {
+        const response = await apiClient.post('/logout');
+        if (response.data.status === true) {
+          removeToken();
+        } else {
+          console.error('Error logging out:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
     },
     getUserInfo() {
-      // Return user information directly from the ref
       return user.value;
     },
   };
@@ -38,9 +41,8 @@ export function useAuth(): Auth {
   // Function to fetch user information
   async function fetchUserInfo() {
     try {
-      const response = await apiClient.get('/v1/merchants/me');
+      const response = await apiClient.get('/me');
       if (response.data.status === true && response.data.data.user) {
-        // Update the user object in your state
         user.value = response.data.data.user;
       } else {
         console.error('Error fetching user data:', response.data.message);
@@ -48,5 +50,11 @@ export function useAuth(): Auth {
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
+  }
+
+  function removeToken() {
+    localStorage.removeItem('token');
+    token.value = null;
+    user.value = null;
   }
 }
