@@ -41,12 +41,18 @@
             {{ console.log('User Object:', user) }}
             <img
               class="object-cover w-full h-full"
-              :src="user?.merchant_logo || 'https://example.com/fallback-image.jpg'"
+              :src="user?.logo || 'https://ui-avatars.com/api/?name=P&background=random&color=fff&rounded=true&bold=true&size=128&length=1'"
               alt="Your avatar"
             />
           </button>
-</div>
-
+  
+        <button class="hidden relative z-10 lg:block lg:flex-row text-left px-3" @click="dropdownOpen = !dropdownOpen">
+          <div v-if="user">
+            <h1 class="text-sm font-semibold">{{ user?.profile?.name || 'Admin' }}</h1>
+            <h1 class="text-sm text-gray-600 font-medium">{{ user?.email }}</h1>
+          </div>
+        </button>
+      </div>
         </div>
 
         <div v-show="dropdownOpen" class="fixed inset-0 z-10 w-full h-full" @click="dropdownOpen = false" />
@@ -62,7 +68,7 @@
           <div v-show="dropdownOpen" class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-main-blue hover:text-white">Profile</a>
             <router-link to="/produksaya" class="block px-4 py-2 text-sm text-gray-700 hover:bg-main-blue hover:text-white">Products</router-link>
-            <router-link to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-main-blue hover:text-white">Log out</router-link>
+            <router-link @click="handleLogout" to="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-main-blue hover:text-white">Log out</router-link>
           </div>
         </transition>
       </div>
@@ -86,17 +92,13 @@ const user = ref<User | null>(getUserInfo());
 const dropdownOpen = ref(false);
 const token = localStorage.getItem('token');
 
-const toggleSidebar = () => {
-  isOpen.value = !isOpen.value;
-};
-
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
 
 const handleLogout = async () => {
   try {
-    logout();
+    await logout();
     router.push('/');
   } catch (err) {
     console.error('Logout error:', err);
@@ -104,14 +106,17 @@ const handleLogout = async () => {
 };
 
 onMounted(async () => {
+  console.log('role:', user);
+
   try {
     // Fetch user data after the component is mounted
     if (token) {
-      const response = await apiClient.get('/me/borrowing-requests');
+      const response = await apiClient.get('/me');
       console.log('Backend Response:', response.data);
+      console.log('User:', response.data.data);
 
       if (response.data.status === true && response.data.data) {
-        user.value = response.data.data.user;
+        user.value = response.data.data;
         setToken(token);
       } else {
         console.error('Error fetching user data:', response.data.message);
@@ -130,8 +135,6 @@ onMounted(async () => {
       console.error('Error message:', error.message);
     }
   }
-
-  console.log('User Logo:', user.value?.merchant_logo || 'fallback-image-url');
 });
 
 </script>

@@ -8,6 +8,7 @@ interface Auth {
   setToken: (newToken: string) => void;
   logout: () => Promise<void>;
   getUserInfo: () => User | null; // Update the return type here
+  isAuthenticated: () => boolean;
 }
 
 const token: Ref<string | null> = ref(localStorage.getItem('token'));
@@ -36,6 +37,9 @@ export function useAuth(): Auth {
     getUserInfo() {
       return user.value;
     },
+    isAuthenticated() {
+      return !!localStorage.getItem('token');
+    }
   };
 
   // Function to fetch user information
